@@ -1,8 +1,10 @@
-// --- CONFIGURAZIONE BEACON ---
-// Inserisci qui i valori del tuo iBeacon
-const BEACON_UUID = "12345678-1234-1234-1234-1234-1234567890ab".toLowerCase();
-const BEACON_MAJOR = 1;
-const BEACON_MINOR = 1;
+// --- CONFIGURAZIONE BEACON MULTI-UFFICIO ---
+// Sostituisci gli UUID quando arrivano i beacon reali
+const BEACONS = [
+    { uuid: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", major: 1, minor: 1, ufficio: "Ufficio A" },
+    { uuid: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", major: 1, minor: 1, ufficio: "Ufficio B" },
+    { uuid: "cccccccc-cccc-cccc-cccc-cccccccccccc", major: 1, minor: 1, ufficio: "Ufficio C" }
+];
 
 // --- FUNZIONE PRINCIPALE ---
 async function startBeaconScan() {
@@ -24,12 +26,16 @@ async function startBeaconScan() {
 
             console.log("Trovato dispositivo:", uuid, major, minor);
 
-            // Controllo se è il nostro beacon
-            if (uuid === BEACON_UUID && major === BEACON_MAJOR && minor === BEACON_MINOR) {
-                console.log("Beacon CRF-UD rilevato!");
+            // --- CONTROLLO MULTI-BEACON ---
+            const beaconTrovato = BEACONS.find(b =>
+                b.uuid === uuid &&
+                b.major === major &&
+                b.minor === minor
+            );
 
-                // Apri il lettore QR
-                openQRScanner();
+            if (beaconTrovato) {
+                console.log("Beacon autorizzato rilevato in:", beaconTrovato.ufficio);
+                openQRScanner(beaconTrovato.ufficio);
             }
         });
 
@@ -40,8 +46,8 @@ async function startBeaconScan() {
 }
 
 // --- APERTURA LETTORE QR ---
-function openQRScanner() {
-    alert("Beacon rilevato! Ora apro il lettore QR...");
+function openQRScanner(ufficio) {
+    alert("Beacon rilevato in: " + ufficio + ". Apro il lettore QR...");
     window.location.href = "https://qrco.de/bcF1kP"; // <-- QUI METTI IL TUO QR SCANNER
 }
 
@@ -53,4 +59,3 @@ window.addEventListener("load", () => {
         alert("Il tuo dispositivo non supporta il Bluetooth.");
     }
 });
-
