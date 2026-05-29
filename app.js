@@ -1,7 +1,7 @@
 // --- CONFIGURAZIONE BEACON MULTI-UFFICIO ---
 // Sostituisci gli UUID quando arrivano i beacon reali
 const BEACONS = [
-    { uuid: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", major: 1, minor: 1, ufficio: "Ufficio A" },
+    { uuid: "2f234454-cf6d-4a0f-adf2-f4911baffa6", major: 1, minor: 1, ufficio: "Ufficio Viale Europa" },
     { uuid: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", major: 1, minor: 1, ufficio: "Ufficio B" },
     { uuid: "cccccccc-cccc-cccc-cccc-cccccccccccc", major: 1, minor: 1, ufficio: "Ufficio C" }
 ];
