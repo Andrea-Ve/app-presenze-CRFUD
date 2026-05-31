@@ -1,17 +1,30 @@
-// --- CONFIGURAZIONE BEACON MULTI-UFFICIO ---
-// Sostituisci gli UUID quando arrivano i beacon reali
+// ---------------------------------------------------------
+// CONFIGURAZIONE BEACON MULTI-UFFICIO
+// Inserisci qui gli UUID reali quando arrivano i beacon fisici
+// ---------------------------------------------------------
+
 const BEACONS = [
     { uuid: "2f234454-cf6d-4a0f-adf2-f4911baffa6", major: 1, minor: 1, ufficio: "Ufficio Viale Europa" },
     { uuid: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", major: 1, minor: 1, ufficio: "Ufficio B" },
     { uuid: "cccccccc-cccc-cccc-cccc-cccccccccccc", major: 1, minor: 1, ufficio: "Ufficio C" }
 ];
 
-// --- FUNZIONE PRINCIPALE ---
+// ---------------------------------------------------------
+// CONFIGURAZIONE GOOGLE FORM
+// Sostituisci questi due valori con i tuoi
+// ---------------------------------------------------------
+
+const FORM_ID = "INSERISCI_QUI_ID_DEL_FORM";
+const ENTRY_ID = "INSERISCI_QUI_ENTRY_ID_DELLA_DOMANDA";
+
+// ---------------------------------------------------------
+// FUNZIONE PRINCIPALE DI SCANSIONE BEACON
+// ---------------------------------------------------------
+
 async function startBeaconScan() {
     try {
         console.log("Richiesta permessi Bluetooth...");
 
-        // Richiesta permessi BLE
         const scan = await navigator.bluetooth.requestLEScan({
             filters: [{ services: [] }],
             keepRepeatedDevices: true
@@ -26,7 +39,7 @@ async function startBeaconScan() {
 
             console.log("Trovato dispositivo:", uuid, major, minor);
 
-            // --- CONTROLLO MULTI-BEACON ---
+            // Cerca il beacon corrispondente
             const beaconTrovato = BEACONS.find(b =>
                 b.uuid === uuid &&
                 b.major === major &&
@@ -34,8 +47,8 @@ async function startBeaconScan() {
             );
 
             if (beaconTrovato) {
-                console.log("Beacon autorizzato rilevato in:", beaconTrovato.ufficio);
-                openQRScanner(beaconTrovato.ufficio);
+                console.log("Beacon rilevato:", beaconTrovato.ufficio);
+                apriGoogleForm(beaconTrovato.ufficio);
             }
         });
 
@@ -45,13 +58,21 @@ async function startBeaconScan() {
     }
 }
 
-// --- APERTURA LETTORE QR ---
-function openQRScanner(ufficio) {
-    alert("Beacon rilevato in: " + ufficio + ". Apro il lettore QR...");
-    window.location.href = "https://qrco.de/bcF1kP"; // <-- QUI METTI IL TUO QR SCANNER
+// ---------------------------------------------------------
+// APERTURA GOOGLE FORM PRECOMPILATO
+// ---------------------------------------------------------
+
+function apriGoogleForm(ufficio) {
+    const url = `https://docs.google.com/forms/d/${FORM_ID}/viewform?usp=pp_url&entry.${ENTRY_ID}=${encodeURIComponent(ufficio)}`;
+
+    console.log("Apro il form precompilato:", url);
+    window.location.href = url;
 }
 
-// --- AVVIO AUTOMATICO ALL'APERTURA DELLA PWA ---
+// ---------------------------------------------------------
+// AVVIO AUTOMATICO ALL'APERTURA DELLA PWA
+// ---------------------------------------------------------
+
 window.addEventListener("load", () => {
     if ("bluetooth" in navigator) {
         startBeaconScan();
